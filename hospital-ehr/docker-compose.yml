@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  api:
+    build: .
+    container_name: ehr_api
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/hospital_ehr
+    depends_on:
+      - mongo
+    volumes:
+      - ./:/app
+      - uploads:/app/uploads
+  mongo:
+    image: mongo:7
+    container_name: ehr_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+volumes:
+  mongo_data: {}
+  uploads: {}

@@ -1,0 +1,135 @@
+openapi: 3.0.0
+info:
+  title: Hospital EHR API
+  version: 1.0.0
+  description: Enterprise-grade EHR API documentation
+servers:
+  - url: http://localhost:4000
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: OK
+  /api/auth/login:
+    post:
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Tokens
+  /api/auth/refresh-token:
+    post:
+      summary: Refresh token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        '200':
+          description: Tokens
+  /api/auth/refresh:
+    post:
+      summary: Refresh token (legacy alias)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        '200':
+          description: Tokens
+  /api/patients/{patientId}:
+    get:
+      summary: Get patient profile by patientId
+      parameters:
+        - in: path
+          name: patientId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Patient
+  /api/patients/{patientId}/history:
+    get:
+      summary: Get medical history
+      parameters:
+        - in: path
+          name: patientId
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: History
+  /api/doctors/search:
+    get:
+      summary: Search patient by patientId
+      parameters:
+        - in: query
+          name: patientId
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Patient
+  /api/doctors/consultations:
+    post:
+      summary: Add consultation with optional file uploads
+      responses:
+        '201':
+          description: Created
+  /api/records:
+    get:
+      summary: List medical records
+      responses:
+        '200':
+          description: Records list
+  /api/admin/doctors:
+    get:
+      summary: List doctors
+      responses:
+        '200':
+          description: Doctors
+    post:
+      summary: Create doctor
+      responses:
+        '201':
+          description: Created
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
